@@ -20,6 +20,11 @@ import pandas as pd
 import xarray as xr
 from scipy.ndimage import gaussian_filter
 from scipy.stats import norm, t as student_t
+from data_processing.config import RAINFALL_PATH
+from data_processing.config import WIND_PATH
+from data_processing.config import NINO34_PATH
+from data_processing.config import MFC_PATH
+from data_processing.config import SVP_PATH
 
 
 FULL_YEARS = np.arange(1981, 2021)
@@ -30,15 +35,15 @@ ANALYSIS_LAT_SLICE = slice(22, -32)
 ANALYSIS_LON_SLICE = slice(88, 157)
 
 RAINFALL_PATH = Path(
-    "/Users/rizzie/TugasAkhir/data_processing/external/ClimateData/mswep-monthly/mswep_monthly_combined.nc"
+    rainfall_path = RAINFALL_PATH
 )
-WIND_PATH = Path("/Users/rizzie/ClimateData/era5-monthly/era5monthly_uvq_1980-2020.nc")
-MFC_PATH = Path("/Users/rizzie/ClimateData/era5-monthly/vimf.nc")
+WIND_PATH = Path(wind_path = WIND_PATH)
+MFC_PATH = Path(mfc_path = MFC_PATH)
 SVP_PATH = Path(
-    "/Users/rizzie/TugasAkhir/data_processing/notebooks/analysis_26-14_rev2/psi_chi_windparts_850.nc"
+    svp_path = SVP_PATH
 )
 NINO34_PATH = Path(
-    "/Users/rizzie/TugasAkhir/data_processing/external/ClimateData/index-monthly/nino34.anom.csv"
+    nino34_path = NINO34_PATH
 )
 NINO34_COLUMN = (
     "   Nino Anom 3.4 Index  using ersstv5 from CPC  missing value -99.99 "

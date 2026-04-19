@@ -10,8 +10,10 @@ Repositori ini berisi analisis mendalam tentang hubungan antara pola curah hujan
 - [Data yang Digunakan](#data-yang-digunakan)
 - [Persyaratan Lingkungan](#persyaratan-lingkungan)
 - [Cara Menggunakan](#cara-menggunakan)
+  - [🔑 Konfigurasi Path Data](#-konfigurasi-path-data-penting)
 - [Keluaran dan Hasil](#keluaran-dan-hasil)
 - [Referensi](#referensi)
+- [ℹ️ Dokumentasi Tambahan](#ℹ️-dokumentasi-tambahan)
 
 ## 🎯 Tentang Proyek
 
@@ -147,7 +149,7 @@ Analisis medan sirkulasi di level tekanan 850 hPa:
 
 ### Lokasi Data:
 ```
-/Users/rizzie/TugasAkhir/
+project_root/
 ├── data_processing/
 │   └── external/ClimateData/
 │       ├── mswep-monthly/mswep_monthly_combined.nc
@@ -155,6 +157,8 @@ Analisis medan sirkulasi di level tekanan 850 hPa:
 └── ClimateData/
     └── era5-monthly/era5monthly_uvq_1980-2020.nc
 ```
+
+**Catatan**: Sesuaikan path data sesuai dengan lokasi penyimpanan lokal Anda. Script menggunakan path absolut yang dapat dimodifikasi di bagian konfigurasi masing-masing file.
 
 ## 🔧 Persyaratan Lingkungan
 
@@ -169,6 +173,7 @@ scikit-learn (untuk PCA/EOF)
 matplotlib
 seaborn
 nbformat (untuk generate notebook)
+python-dotenv (untuk konfigurasi path)
 ```
 
 ### Setup Environment:
@@ -179,26 +184,62 @@ conda activate climate-analysis
 conda install numpy pandas xarray scipy scikit-learn matplotlib seaborn
 
 # Atau menggunakan pip
-pip install numpy pandas xarray scipy scikit-learn matplotlib seaborn
+pip install numpy pandas xarray scipy scikit-learn matplotlib seaborn python-dotenv
 ```
 
 ### Software Tambahan:
 - **Jupyter Notebook/JupyterLab**: Untuk menjalankan notebook interaktif
 - **Python 3.8+**: Interpreter Python
+- **Git**: Untuk version control (opsional tapi recommended)
 
 ## 🚀 Cara Menggunakan
 
+### 🔑 Konfigurasi Path Data (PENTING)
+Proyek menggunakan file konfigurasi untuk path data yang fleksibel. Ada 2 cara setup:
+
+**Opsi 1: Menggunakan Config Module (Recommended)**
+```python
+# Di notebook atau script Anda
+from data_processing.config import RAINFALL_PATH, WIND_PATH, NINO34_PATH
+
+# Atau untuk path custom
+from data_processing.config import get_data_path
+rainfall = get_data_path('rainfall', 'mswep_monthly_combined.nc')
+wind = get_data_path('wind', 'era5monthly_uvq_1980-2020.nc')
+```
+
+**Opsi 2: Menggunakan Environment Variables**
+```bash
+# Set di terminal atau .env file
+export ERA5_PATH="/path/to/your/era5-data"
+export MFC_PATH="/path/to/your/mfc-data"
+
+# Atau copy .env.example ke .env dan edit sesuai setup lokal:
+cp data_processing/.env.example data_processing/.env
+# Edit .env dengan path lokal Anda
+```
+
+**Opsi 3: Setup Git Pre-commit Hook (Untuk GitHub Safety)**
+```bash
+# Jalankan ini untuk prevent accidental hard-coded paths
+cd /path/to/repo
+python setup_git_hooks.py
+```
+
 ### 1. Setup Data
-Pastikan semua data input tersedia di lokasi yang ditentukan:
+Pastikan semua data input tersedia di lokasi yang ditentukan. Update konfigurasi sesuai dengan struktur folder lokal Anda:
 ```bash
 # Verifikasi keberadaan data
-ls -la /Users/rizzie/TugasAkhir/data_processing/external/ClimateData/
-ls -la /Users/rizzie/ClimateData/
+ls -la ./external/ClimateData/
+ls -la ../ClimateData/
+
+# Atau gunakan config module
+python -c "from data_processing.config import RAINFALL_PATH; print(RAINFALL_PATH)"
 ```
 
 ### 2. Menjalankan Notebook Interaktif
 ```bash
-cd /Users/rizzie/TugasAkhir/data_processing/notebooks
+cd data_processing/notebooks
 jupyter notebook comprehensive_analysis/rainfall_analysis_v3.ipynb
 ```
 
@@ -206,24 +247,24 @@ jupyter notebook comprehensive_analysis/rainfall_analysis_v3.ipynb
 Beberapa notebook di-generate dari script Python:
 ```bash
 # EOF Analysis
-cd /Users/rizzie/TugasAkhir/data_processing/notebooks/eof_analysis
+cd data_processing/notebooks/eof_analysis
 python build_mswep_eof_mc_notebook.py
 
 # Correlation Analysis
-cd /Users/rizzie/TugasAkhir/data_processing/notebooks/comprehensive_analysis/scripts
+cd data_processing/notebooks/comprehensive_analysis/scripts
 python build_correlation_global.py
 python build_correlation_mc_v3.py
 ```
 
 ### 4. Menjalankan Analisis Running Correlation
 ```bash
-cd /Users/rizzie/TugasAkhir/data_processing/notebooks/running_correlation
+cd data_processing/notebooks/running_correlation
 python djf_runningcorr_domainjson_layoutAC.py
 ```
 
 ### 5. Mengerjakan Workflow Divided Correlation
 ```bash
-cd /Users/rizzie/TugasAkhir/data_processing/notebooks/divided_correlation
+cd data_processing/notebooks/divided_correlation
 jupyter notebook dcorr_v6_workflow.ipynb
 ```
 
@@ -314,19 +355,25 @@ Untuk pertanyaan atau diskusi tentang proyek ini, silakan hubungi penulis melalu
 5. Periksa `non_stationarity/` untuk temporal evolution
 6. Lihat `itcz_analysis/` untuk mekanisme regional
 
-### Tips Teknis:
+## Tips Teknis:
 - **Memory-intensive**: Beberapa notebook besar memerlukan 8GB+ RAM
 - **Reproducibility**: Gunakan seed yang konsisten untuk random operations
 - **Performance**: Loading MSWEP data full resolution dapat lambat; pertimbangkan subsetting
-- **Data Paths**: Update paths dalam script jika file dipindahkan
+- **Data Paths**: Gunakan config module atau .env untuk path setup (jangan hard-code!)
 - **Version Control**: Simpan output notebook/figures di `git` untuk tracking perubahan
 
 ### Debugging Umum:
 - **Import Error**: Pastikan semua packages terinstall dengan `conda list`
-- **Data Not Found**: Periksa spelling dan lokasi path di script
+- **Data Not Found**: Periksa path configuration di `data_processing/config.py`
+- **Environment Variable Error**: Verify `.env` file atau set `ERA5_PATH` environment variable
 - **Memory Error**: Kurangi resolusi atau gunakan dask untuk lazy loading
 - **Slow Computation**: Subset temporal/spatial domain untuk testing
 
 ---
 
-**Happy analyzing! 🌍📊**
+## ℹ️ Dokumentasi Tambahan
+
+**Path Management**:
+- Baca [`PATH_MANAGEMENT_GUIDE.md`](../PATH_MANAGEMENT_GUIDE.md) untuk panduan lengkap konfigurasi path
+- Setup git pre-commit hook dengan: `python setup_git_hooks.py`
+- Lihat [`data_processing/.env.example`](../data_processing/.env.example) untuk template environment variables
