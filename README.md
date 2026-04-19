@@ -14,6 +14,7 @@ Repositori ini berisi analisis mendalam tentang hubungan antara pola curah hujan
 - [Keluaran dan Hasil](#keluaran-dan-hasil)
 - [Referensi](#referensi)
 - [ℹ️ Dokumentasi Tambahan](#ℹ️-dokumentasi-tambahan)
+- [🔐 Notebook Output Management](#-notebook-output-management)
 
 ## 🎯 Tentang Proyek
 
@@ -377,3 +378,46 @@ Untuk pertanyaan atau diskusi tentang proyek ini, silakan hubungi penulis melalu
 - Baca [`PATH_MANAGEMENT_GUIDE.md`](../PATH_MANAGEMENT_GUIDE.md) untuk panduan lengkap konfigurasi path
 - Setup git pre-commit hook dengan: `python setup_git_hooks.py`
 - Lihat [`data_processing/.env.example`](../data_processing/.env.example) untuk template environment variables
+
+**Notebook Output Management**:
+- Baca [`NBSTRIPOUT_GUIDE.md`](../NBSTRIPOUT_GUIDE.md) untuk panduan notebook output cleanup
+- nbstripout otomatis menghapus outputs sebelum push ke GitHub
+- Local notebooks Anda tetap memiliki outputs
+
+---
+
+## 🔐 Notebook Output Management
+
+Repository ini menggunakan **nbstripout** untuk keamanan dan kebersihan:
+
+### Bagaimana Cara Kerjanya?
+
+- **Lokal (Komputer Anda)**: Notebook dengan outputs (untuk referensi)
+- **GitHub**: Notebook tanpa outputs (privacy & clean)
+- **Anda**: Tidak perlu berbuat apa-apa! Semua otomatis
+
+### Mengapa Penting?
+
+Notebook outputs bisa berisi path sensitif seperti:
+```
+/Users/yourname/miniforge3/envs/climate_data/lib/python3.13/site-packages/shapely/creation.py:730
+```
+
+Dengan nbstripout:
+- ✅ Outputs dihapus sebelum push ke GitHub
+- ✅ Local files tetap punya outputs
+- ✅ Tidak ada path sensitif di GitHub
+
+### Setup Untuk Collaborators
+
+```bash
+# Install nbstripout
+pip install nbstripout
+
+# Configure git filter
+git config filter.nbstripout.clean 'nbstripout'
+git config filter.nbstripout.smudge cat
+git config filter.nbstripout.required true
+```
+
+Atau baca [`NBSTRIPOUT_GUIDE.md`](../NBSTRIPOUT_GUIDE.md) untuk detail lengkap.
