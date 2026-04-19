@@ -1,0 +1,8 @@
+# nbstripout: Remove notebook outputs before commit
+*.ipynb filter=nbstripout
+
+# Binary files
+*.nc binary
+*.h5 binary
+*.png binary
+*.jpg binary
