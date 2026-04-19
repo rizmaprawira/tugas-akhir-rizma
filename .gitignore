@@ -1,0 +1,35 @@
+# Existing rules
+data/
+results/
+runs/
+configs/paths.yml
+.env
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+**/.mplconfig/
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.pytest_cache/
+.DS_Store
+
+# New recommended additions
+# Ignore specific output folders from notebooks
+notebooks/comprehensive_analysis/data_nc/
+
+# Ignore data and image file extensions globally
+*.nc
+*.xlsx
+*.csv
+*.png
+*.jpg
+*.jpeg
+*.grib
+*.tif
+*.tiff
+*.gif
+*.mp4
+
+# Archive directory contents
+archive/
