@@ -150,16 +150,21 @@ Analisis medan sirkulasi di level tekanan 850 hPa:
 
 ### Lokasi Data:
 ```
-project_root/
-├── data_processing/
-│   └── external/ClimateData/
-│       ├── mswep-monthly/mswep_monthly_combined.nc
-│       └── index-monthly/nino34.anom.csv
-└── ClimateData/
-    └── era5-monthly/era5monthly_uvq_1980-2020.nc
+notebooks/
+├── comprehensive_analysis/
+├── divided_correlation/
+├── eof_analysis/
+│   └── data dari ../
+├── non_stationarity/
+├── lagged_correlation/
+├── running_correlation/
+├── itcz_analysis/
+├── circulation850hpa/
+├── cluster_enso/
+└── (semua folder analisis)
 ```
 
-**Catatan**: Sesuaikan path data sesuai dengan lokasi penyimpanan lokal Anda. Script menggunakan path absolut yang dapat dimodifikasi di bagian konfigurasi masing-masing file.
+**Catatan**: Notebook menggunakan relative paths untuk mengakses data, jadi pastikan struktur folder tetap konsisten.
 
 ## 🔧 Persyaratan Lingkungan
 
@@ -194,38 +199,6 @@ pip install numpy pandas xarray scipy scikit-learn matplotlib seaborn python-dot
 - **Git**: Untuk version control (opsional tapi recommended)
 
 ## 🚀 Cara Menggunakan
-
-### 🔑 Konfigurasi Path Data (PENTING)
-Proyek menggunakan file konfigurasi untuk path data yang fleksibel. Ada 2 cara setup:
-
-**Opsi 1: Menggunakan Config Module (Recommended)**
-```python
-# Di notebook atau script Anda
-from data_processing.config import RAINFALL_PATH, WIND_PATH, NINO34_PATH
-
-# Atau untuk path custom
-from data_processing.config import get_data_path
-rainfall = get_data_path('rainfall', 'mswep_monthly_combined.nc')
-wind = get_data_path('wind', 'era5monthly_uvq_1980-2020.nc')
-```
-
-**Opsi 2: Menggunakan Environment Variables**
-```bash
-# Set di terminal atau .env file
-export ERA5_PATH="/path/to/your/era5-data"
-export MFC_PATH="/path/to/your/mfc-data"
-
-# Atau copy .env.example ke .env dan edit sesuai setup lokal:
-cp data_processing/.env.example data_processing/.env
-# Edit .env dengan path lokal Anda
-```
-
-**Opsi 3: Setup Git Pre-commit Hook (Untuk GitHub Safety)**
-```bash
-# Jalankan ini untuk prevent accidental hard-coded paths
-cd /path/to/repo
-python setup_git_hooks.py
-```
 
 ### 1. Setup Data
 Pastikan semua data input tersedia di lokasi yang ditentukan. Update konfigurasi sesuai dengan struktur folder lokal Anda:
@@ -360,13 +333,11 @@ Untuk pertanyaan atau diskusi tentang proyek ini, silakan hubungi penulis melalu
 - **Memory-intensive**: Beberapa notebook besar memerlukan 8GB+ RAM
 - **Reproducibility**: Gunakan seed yang konsisten untuk random operations
 - **Performance**: Loading MSWEP data full resolution dapat lambat; pertimbangkan subsetting
-- **Data Paths**: Gunakan config module atau .env untuk path setup (jangan hard-code!)
 - **Version Control**: Simpan output notebook/figures di `git` untuk tracking perubahan
 
 ### Debugging Umum:
 - **Import Error**: Pastikan semua packages terinstall dengan `conda list`
-- **Data Not Found**: Periksa path configuration di `data_processing/config.py`
-- **Environment Variable Error**: Verify `.env` file atau set `ERA5_PATH` environment variable
+- **Data Not Found**: Periksa struktur folder dan relative paths di notebook
 - **Memory Error**: Kurangi resolusi atau gunakan dask untuk lazy loading
 - **Slow Computation**: Subset temporal/spatial domain untuk testing
 
@@ -374,13 +345,7 @@ Untuk pertanyaan atau diskusi tentang proyek ini, silakan hubungi penulis melalu
 
 ## ℹ️ Dokumentasi Tambahan
 
-**Path Management**:
-- Baca [`PATH_MANAGEMENT_GUIDE.md`](../PATH_MANAGEMENT_GUIDE.md) untuk panduan lengkap konfigurasi path
-- Setup git pre-commit hook dengan: `python setup_git_hooks.py`
-- Lihat [`data_processing/.env.example`](../data_processing/.env.example) untuk template environment variables
-
 **Notebook Output Management**:
-- Baca [`NBSTRIPOUT_GUIDE.md`](../NBSTRIPOUT_GUIDE.md) untuk panduan notebook output cleanup
 - nbstripout otomatis menghapus outputs sebelum push ke GitHub
 - Local notebooks Anda tetap memiliki outputs
 
