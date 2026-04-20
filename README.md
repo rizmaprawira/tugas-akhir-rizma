@@ -306,7 +306,8 @@ Attributes:
 ## 👤 Author
 **Nama**: Rizma Prawira  
 **NIM**: 12822029  
-**Institusi**: [Institut/Universitas]  
+**Institusi**: Institut Teknologi Bandung
+**Dosen Pembimbing**: Dr. M. Rais Abdillah, S.Si., M.Sc.
 **Tahun**: 2025-2026
 
 ## 📝 Lisensi
@@ -363,10 +364,7 @@ Repository ini menggunakan **nbstripout** untuk keamanan dan kebersihan:
 
 ### Mengapa Penting?
 
-Notebook outputs bisa berisi path sensitif seperti:
-```
-/Users/yourname/miniforge3/envs/climate_data/lib/python3.13/site-packages/shapely/creation.py:730
-```
+Notebook outputs bisa berisi path sensitif 
 
 Dengan nbstripout:
 - ✅ Outputs dihapus sebelum push ke GitHub
