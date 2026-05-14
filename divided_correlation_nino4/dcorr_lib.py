@@ -1253,7 +1253,7 @@ def plot_split_timeline(split_df: pd.DataFrame, config: DividedCorrelationV4Conf
     ax.set_yticks(range(n_splits))
     ax.set_yticklabels(split_df["split_id"].astype(str).tolist()[::-1])
     ax.set_xlabel("DJF Year")
-    ax.set_ylabel("Split Configuration")
+    ax.set_ylabel("Konfigurasi Split")
     ax.set_title("Period Split Experiment Timeline")
     ax.axvline(2000, color="gray", linestyle="--", alpha=0.5)
     ax.legend(
@@ -1287,7 +1287,7 @@ def plot_correlation_map(
         vmin=config.corr_vmin,
         vmax=config.corr_vmax,
         add_colorbar=True,
-        cbar_kwargs={"label": "Pearson Correlation"},
+        cbar_kwargs={"label": "Korelasi Pearson"},
     )
     _add_map_context(ax, extent)
     ax.set_title(title)
@@ -1372,7 +1372,7 @@ def plot_split_2x2(
     # Shared colorbar for P1 and P2 (bottom left)
     cbar_ax1 = fig.add_axes([0.08, 0.06, 0.38, 0.02])
     cbar1 = plt.colorbar(im2, cax=cbar_ax1, orientation='horizontal')
-    cbar1.set_label('Pearson Correlation', fontsize=9)
+    cbar1.set_label('Korelasi Pearson', fontsize=9)
     
     # Delta correlation
     im3 = delta.plot(
@@ -1391,7 +1391,7 @@ def plot_split_2x2(
     cbar2 = plt.colorbar(im3, cax=cbar_ax2, orientation='horizontal')
     cbar2.set_label('Δr (P2 - P1)', fontsize=9)
     
-    fig.suptitle(f"Split {split_id}: DJF Rainfall vs Niño 4", fontsize=12, y=0.98)
+    fig.suptitle(f"Split {split_id}: Curah Hujan DJF vs Niño 4", fontsize=12, y=0.98)
     save_png(fig, out_path, config.dpi)
 
 
@@ -1455,7 +1455,7 @@ def plot_split_metric_lines(
     config: DividedCorrelationV4Config,
     out_path: Path,
     y_col: str = "mean_abs_delta_r",
-    y_label: str = "Mean |Δr|",
+    y_label: str = "Rata-rata |Δr|",
 ) -> None:
     """Summary plot with x-axis sorted 10v30 to 30v10, ticks on all sides, labels bottom/left."""
     metrics_df = sort_splits_for_plotting(metrics_df)
@@ -1466,9 +1466,9 @@ def plot_split_metric_lines(
     
     ax.set_xticks(x)
     ax.set_xticklabels(metrics_df["split_id"].astype(str).tolist(), rotation=45, ha="right")
-    ax.set_xlabel("Split Configuration")
+    ax.set_xlabel("Konfigurasi Split")
     ax.set_ylabel(y_label)
-    ax.set_title(f"Split Sensitivity: {y_label}")
+    ax.set_title(f"Sensitivitas Split: {y_label}")
     ax.grid(True, alpha=0.3)
     
     # Ticks on all sides, labels only bottom/left
@@ -1501,9 +1501,9 @@ def plot_split_changed_cells(
     
     axes[0].set_xticks(x)
     axes[0].set_xticklabels(metrics_df["split_id"].astype(str).tolist(), rotation=45, ha="right")
-    axes[0].set_xlabel("Split Configuration")
-    axes[0].set_ylabel(f"Number of Changed {cell_label} Cells")
-    axes[0].set_title(f"Changed {cell_label} Cells (Count)")
+    axes[0].set_xlabel("Konfigurasi Split")
+    axes[0].set_ylabel(f"Jumlah {cell_label} yang Berubah")
+    axes[0].set_title(f"{cell_label} yang Berubah (Jumlah)")
     axes[0].legend()
     axes[0].grid(True, alpha=0.3)
     axes[0].tick_params(left=True, right=True, top=True, bottom=True,
@@ -1518,9 +1518,9 @@ def plot_split_changed_cells(
     
     axes[1].set_xticks(x)
     axes[1].set_xticklabels(metrics_df["split_id"].astype(str).tolist(), rotation=45, ha="right")
-    axes[1].set_xlabel("Split Configuration")
-    axes[1].set_ylabel(f"Fraction of {cell_label} Cells (%)")
-    axes[1].set_title(f"Changed {cell_label} Cells (Percentage)")
+    axes[1].set_xlabel("Konfigurasi Split")
+    axes[1].set_ylabel(f"Persentase {cell_label} (%)")
+    axes[1].set_title(f"{cell_label} yang Berubah (Persentase)")
     axes[1].legend()
     axes[1].grid(True, alpha=0.3)
     axes[1].tick_params(left=True, right=True, top=True, bottom=True,
@@ -1548,9 +1548,9 @@ def plot_positive_delta_cells(
 
     ax.set_xticks(x)
     ax.set_xticklabels(metrics_df["split_id"].astype(str).tolist(), rotation=45, ha="right")
-    ax.set_xlabel("Split Configuration")
-    ax.set_ylabel("Number of Land Cells")
-    ax.set_title("Positive Delta Correlation Cells")
+    ax.set_xlabel("Konfigurasi Split")
+    ax.set_ylabel("Jumlah Grid Daratan")
+    ax.set_title("Grid Korelasi Delta Positif")
     ax.legend()
     ax.grid(True, alpha=0.3)
     ax.tick_params(
@@ -1579,14 +1579,14 @@ def plot_strengthen_weaken_balance(
     x = np.arange(len(metrics_df))
     width = 0.35
     
-    ax.bar(x - width / 2, metrics_df["n_strengthen"].values, width, label="Strengthening", color="forestgreen")
-    ax.bar(x + width / 2, metrics_df["n_weaken"].values, width, label="Weakening", color="firebrick")
+    ax.bar(x - width / 2, metrics_df["n_strengthen"].values, width, label="Penguatan", color="forestgreen")
+    ax.bar(x + width / 2, metrics_df["n_weaken"].values, width, label="Pelemahan", color="firebrick")
     
     ax.set_xticks(x)
     ax.set_xticklabels(metrics_df["split_id"].astype(str).tolist(), rotation=45, ha="right")
-    ax.set_xlabel("Split Configuration")
-    ax.set_ylabel("Number of Land Cells")
-    ax.set_title(f"Strengthening vs Weakening (threshold: {config.strengthen_threshold})")
+    ax.set_xlabel("Konfigurasi Split")
+    ax.set_ylabel("Jumlah Grid Daratan")
+    ax.set_title(f"Penguatan vs Pelemahan (ambang: {config.strengthen_threshold})")
     ax.legend()
     ax.grid(True, alpha=0.3, axis="y")
     ax.tick_params(left=True, right=True, top=True, bottom=True,
@@ -1609,9 +1609,9 @@ def plot_sign_flip_count(
     
     ax.set_xticks(x)
     ax.set_xticklabels(metrics_df["split_id"].astype(str).tolist(), rotation=45, ha="right")
-    ax.set_xlabel("Split Configuration")
-    ax.set_ylabel("Number of Sign-Flip Cells")
-    ax.set_title(f"Sign Flips (|r| ≥ {config.sign_flip_min_abs_r} in both periods)")
+    ax.set_xlabel("Konfigurasi Split")
+    ax.set_ylabel("Jumlah Grid Perubahan Tanda")
+    ax.set_title(f"Perubahan Tanda Grid (|r| ≥ {config.sign_flip_min_abs_r} pada kedua periode)")
     ax.grid(True, alpha=0.3, axis="y")
     ax.tick_params(left=True, right=True, top=True, bottom=True,
                    labelleft=True, labelright=False, labeltop=False, labelbottom=True)
@@ -1625,7 +1625,7 @@ def plot_hotspot_location_map(
     land_mask: xr.DataArray,
     config: DividedCorrelationV4Config,
     out_path: Path,
-    title: str = "Selected Hotspots",
+    title: str = "Hotspot Terpilih",
 ) -> None:
     extent = (config.lon_min, config.lon_max, config.lat_min, config.lat_max)
     
@@ -1665,10 +1665,10 @@ def plot_hotspot_running_by_metric(
     """
     metrics = ["correlation", "rain_variance", "nino_variance", "covariance"]
     metric_labels = {
-        "correlation": "Running Correlation",
-        "rain_variance": "Running Rainfall Variance",
-        "nino_variance": "Running Niño 4 Variance",
-        "covariance": "Running Covariance",
+        "correlation": "Korelasi Berjalan",
+        "rain_variance": "Varians Curah Hujan Berjalan",
+        "nino_variance": "Varians Niño 4 Berjalan",
+        "covariance": "Kovarians Berjalan",
     }
     
     for metric in metrics:
@@ -1681,9 +1681,9 @@ def plot_hotspot_running_by_metric(
             ax.plot(df["year"], df[metric], marker=".", linewidth=1.5, markersize=4, label=label, alpha=0.8)
         
         ax.axhline(0, color="gray", linestyle="--", alpha=0.5)
-        ax.set_xlabel("DJF Year (center of window)")
+        ax.set_xlabel("Tahun DJF (tengah jendela)")
         ax.set_ylabel(metric_labels[metric])
-        ax.set_title(f"{metric_labels[metric]} (window={window})")
+        ax.set_title(f"{metric_labels[metric]} (jendela={window})")
         ax.legend(loc="best", fontsize=8, ncol=2)
         ax.grid(True, alpha=0.3)
         ax.tick_params(left=True, right=True, top=True, bottom=True,
@@ -1836,10 +1836,10 @@ def run_workflow(config: DividedCorrelationV4Config) -> dict[str, object]:
     # Baseline
     plot_correlation_map(fullperiod_ds["correlation"], config,
                          config.png_baseline_dir / f"dcorr_v4_djf_{config.start_year}_{config.end_year}_fullperiod_correlation.png",
-                         f"DJF {config.start_year}-{config.end_year} Full Period Correlation")
+                         f"Korelasi Periode Penuh DJF {config.start_year}-{config.end_year}")
     plot_correlation_map(fullperiod_ds["regression_slope"], config,
                          config.png_baseline_dir / f"dcorr_v4_djf_{config.start_year}_{config.end_year}_fullperiod_slope.png",
-                         f"DJF {config.start_year}-{config.end_year} Full Period Regression Slope")
+                         f"Gradien Regresi Periode Penuh DJF {config.start_year}-{config.end_year}")
     plot_land_mask(analysis_mask, config, config.png_baseline_dir / f"dcorr_v4_djf_{config.start_year}_{config.end_year}_land_mask.png")
     plot_split_timeline(split_df, config, config.png_baseline_dir / f"dcorr_v4_djf_{config.start_year}_{config.end_year}_split_timeline.png")
     
@@ -1861,7 +1861,7 @@ def run_workflow(config: DividedCorrelationV4Config) -> dict[str, object]:
     # Summary
     print("  Generating summary plots...")
     plot_split_metric_lines(metrics_df, config, config.png_summaries_dir / "dcorr_v4_djf_sensitivity_mean_abs_delta_r.png",
-                            y_col="mean_abs_delta_r", y_label="Mean |Δr| over land")
+                            y_col="mean_abs_delta_r", y_label="Rata-rata |Δr| di darat")
     plot_split_changed_cells(
         metrics_df,
         config,
@@ -1890,7 +1890,7 @@ def run_workflow(config: DividedCorrelationV4Config) -> dict[str, object]:
     if len(hotspot_df) > 0:
         plot_hotspot_location_map(hotspot_df, analysis_mask, config,
                                   config.png_summaries_dir / "dcorr_v4_djf_hotspots_map.png",
-                                  title=f"Hotspots (from split {best_split})")
+                                  title=f"Hotspot (dari split {best_split})")
         for window in config.running_windows:
             plot_hotspot_running_by_metric(running_stats, hotspot_df, window, config, config.png_running_dir)
     
